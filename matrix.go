@@ -30,6 +30,16 @@ func (m *Matrix) Set(row, column int, value float64) {
 	m.Data[row*m.ColumnCount+column] = value
 }
 
+func (m Matrix) Copy() Matrix {
+	c := Matrix{
+		RowCount:    m.RowCount,
+		ColumnCount: m.ColumnCount,
+		Data:        make([]float64, len(m.Data)),
+	}
+	copy(c.Data, m.Data)
+	return c
+}
+
 func (m Matrix) Row(y int) Matrix {
 	r := Matrix{
 		RowCount:    1,
@@ -50,6 +60,15 @@ func (m Matrix) Column(x int) Matrix {
 		c.Data[i] = m.Data[x+i*m.ColumnCount]
 	}
 	return c
+}
+
+func (m *Matrix) Reshape(rows, columns int) error {
+	if m.RowCount*m.ColumnCount != rows*columns {
+		return errors.New("mat.Matrix.Reshape: new shape must have the same number of elements as old shape")
+	}
+	m.RowCount = rows
+	m.ColumnCount = columns
+	return nil
 }
 
 func (m Matrix) Transposed() Matrix {

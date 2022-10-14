@@ -147,3 +147,43 @@ func TestColumn(t *testing.T) {
 	check.Eq(t, c2.ColumnCount, 1)
 	check.Eq(t, c2.Data, []float64{3, 6})
 }
+
+func TestCopy(t *testing.T) {
+	m, _ := mat.NewMatrix(2, 3, []float64{
+		1, 2, 3,
+		4, 5, 6,
+	})
+
+	c := m.Copy()
+
+	for i := range m.Data {
+		m.Data[i] = 0
+	}
+
+	check.Eq(t, c.RowCount, 2)
+	check.Eq(t, c.ColumnCount, 3)
+	check.Eq(t, c.Data, []float64{
+		1, 2, 3,
+		4, 5, 6,
+	})
+}
+
+func TestReshape(t *testing.T) {
+	m, _ := mat.NewMatrix(2, 3, []float64{
+		1, 2, 3,
+		4, 5, 6,
+	})
+
+	err := m.Reshape(1, 6)
+	check.Eq(t, err, nil)
+	check.Eq(t, m.RowCount, 1)
+	check.Eq(t, m.ColumnCount, 6)
+
+	err = m.Reshape(3, 2)
+	check.Eq(t, err, nil)
+	check.Eq(t, m.RowCount, 3)
+	check.Eq(t, m.ColumnCount, 2)
+
+	err = m.Reshape(7, 1)
+	check.Neq(t, err, nil)
+}
