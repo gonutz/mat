@@ -217,3 +217,106 @@ func TestIdentity(t *testing.T) {
 		0, 0, 1,
 	})
 }
+
+func TestInverse(t *testing.T) {
+	m, _ := mat.Identity(1)
+	inv, err := m.Inverse()
+	check.Eq(t, err, nil)
+	check.Eq(t, inv.RowCount, 1)
+	check.Eq(t, inv.ColumnCount, 1)
+	check.Eq(t, inv.Data, []float64{1})
+
+	m, _ = mat.Identity(2)
+	inv, err = m.Inverse()
+	check.Eq(t, err, nil)
+	check.Eq(t, inv.RowCount, 2)
+	check.Eq(t, inv.ColumnCount, 2)
+	check.Eq(t, inv.Data, []float64{
+		1, 0,
+		0, 1,
+	})
+
+	m, _ = mat.NewMatrix(2, 2, []float64{
+		1, 2,
+		3, 4,
+	})
+	inv, err = m.Inverse()
+	check.Eq(t, err, nil)
+	check.Eq(t, inv.RowCount, 2)
+	check.Eq(t, inv.ColumnCount, 2)
+	check.Eq(t, inv.Data, []float64{
+		-2.0, +1.0,
+		+1.5, -0.5,
+	})
+
+	m, _ = mat.NewMatrix(3, 3, []float64{
+		0, 0, 1,
+		0, 1, 0,
+		1, 0, 0,
+	})
+	inv, err = m.Inverse()
+	check.Eq(t, err, nil)
+	check.Eq(t, inv.RowCount, 3)
+	check.Eq(t, inv.ColumnCount, 3)
+	check.Eq(t, inv.Data, []float64{
+		0, 0, 1,
+		0, 1, 0,
+		1, 0, 0,
+	})
+
+	m, _ = mat.NewMatrix(3, 3, []float64{
+		2, 8, 5,
+		3, 11, 7,
+		9, 34, 21,
+	})
+	inv, err = m.Inverse()
+	check.Eq(t, err, nil)
+	check.Eq(t, inv.RowCount, 3)
+	check.Eq(t, inv.ColumnCount, 3)
+	check.Eq(t, inv.Data, []float64{
+		-7, 2, 1,
+		0, -3, 1,
+		3, 4, -2,
+	})
+
+	m, _ = mat.NewMatrix(4, 4, []float64{
+		1, 1, 1, 0,
+		0, 3, 1, 2,
+		2, 3, 1, 0,
+		1, 0, 2, 1,
+	})
+	inv, err = m.Inverse()
+	check.Eq(t, err, nil)
+	check.Eq(t, inv.RowCount, 4)
+	check.Eq(t, inv.ColumnCount, 4)
+	check.Eq(t, inv.Data, []float64{
+		-3, -0.5, 1.5, 1,
+		1, 0.25, -0.25, -0.5,
+		3, 0.25, -1.25, -0.5,
+		-3, 0, 1, 1,
+	})
+
+	// Matrices do not have full rank:
+	m, _ = mat.NewMatrix(2, 2, []float64{
+		1, 0,
+		0, 0,
+	})
+	_, err = m.Inverse()
+	check.Neq(t, err, nil)
+
+	m, _ = mat.NewMatrix(3, 3, []float64{
+		0, 0, 1,
+		0, 1, 0,
+		0, 0, 0,
+	})
+	_, err = m.Inverse()
+	check.Neq(t, err, nil)
+
+	// Matrix is not square:
+	m, _ = mat.NewMatrix(2, 3, []float64{
+		1, 2, 3,
+		4, 5, 6,
+	})
+	_, err = m.Inverse()
+	check.Neq(t, err, nil)
+}
