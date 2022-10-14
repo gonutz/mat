@@ -110,3 +110,18 @@ func Multiply(m1, m2 Matrix, ms ...Matrix) (Matrix, error) {
 	}
 	return Multiply(p, ms[0], ms[1:]...)
 }
+
+func Identity(dimension int) (Matrix, error) {
+	if dimension <= 0 {
+		return Matrix{}, errors.New("mat.Identity: dimension must be greater than zero")
+	}
+	m := Matrix{
+		RowCount:    dimension,
+		ColumnCount: dimension,
+		Data:        make([]float64, dimension*dimension),
+	}
+	for i := 0; i < dimension; i++ {
+		m.Data[i*(dimension+1)] = 1
+	}
+	return m, nil
+}

@@ -187,3 +187,33 @@ func TestReshape(t *testing.T) {
 	err = m.Reshape(7, 1)
 	check.Neq(t, err, nil)
 }
+
+func TestIdentity(t *testing.T) {
+	m, err := mat.Identity(0)
+	check.Neq(t, err, nil)
+
+	m, err = mat.Identity(1)
+	check.Eq(t, err, nil)
+	check.Eq(t, m.RowCount, 1)
+	check.Eq(t, m.ColumnCount, 1)
+	check.Eq(t, m.Data, []float64{1})
+
+	m, err = mat.Identity(2)
+	check.Eq(t, err, nil)
+	check.Eq(t, m.RowCount, 2)
+	check.Eq(t, m.ColumnCount, 2)
+	check.Eq(t, m.Data, []float64{
+		1, 0,
+		0, 1,
+	})
+
+	m, err = mat.Identity(3)
+	check.Eq(t, err, nil)
+	check.Eq(t, m.RowCount, 3)
+	check.Eq(t, m.ColumnCount, 3)
+	check.Eq(t, m.Data, []float64{
+		1, 0, 0,
+		0, 1, 0,
+		0, 0, 1,
+	})
+}
