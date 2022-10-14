@@ -30,6 +30,28 @@ func (m *Matrix) Set(row, column int, value float64) {
 	m.Data[row*m.ColumnCount+column] = value
 }
 
+func (m Matrix) Row(y int) Matrix {
+	r := Matrix{
+		RowCount:    1,
+		ColumnCount: m.ColumnCount,
+		Data:        make([]float64, m.ColumnCount),
+	}
+	copy(r.Data, m.Data[y*m.ColumnCount:(y+1)*m.ColumnCount])
+	return r
+}
+
+func (m Matrix) Column(x int) Matrix {
+	c := Matrix{
+		RowCount:    m.RowCount,
+		ColumnCount: 1,
+		Data:        make([]float64, m.RowCount),
+	}
+	for i := range c.Data {
+		c.Data[i] = m.Data[x+i*m.ColumnCount]
+	}
+	return c
+}
+
 func (m Matrix) Transposed() Matrix {
 	t := Matrix{
 		RowCount:    m.ColumnCount,
